@@ -20,18 +20,15 @@ jobs:
         with:
           key: kotlin-build
           path: .gradle
-      - name: Get version
-        run: echo "NEW_VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
-      - name: Get Tag Name
-        run: echo "TAG_NAME=\"gooddata-server-oauth2-${{ github.event.inputs.version }}\"" >> $GITHUB_OUTPUT
-      - name: Create tag
-        run: echo "git tag $TAG_NAME" |
-             echo ">>> git push origin $TAG_NAME"
       - name: Publish to Nexus and to GitLab with Gradle Wrapper
         env:
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
           GITLAB_PACKAGES_UPLOAD_TOKEN: ${{ secrets.GITLAB_PACKAGES_UPLOAD_TOKEN }}
+          VERSION: ${{ github.event.inputs.version }}
+          TAG_NAME: gooddata-server-oauth2-${{ github.event.inputs.version }}
         run: |
-          echo "./gradlew clean publish -Pversion=$TAG_NAME --info"
-          
+          echo ">>> git tag $TAG_NAME" |
+          echo ">>> git push origin $TAG_NAME"
+          echo ">>> ./gradlew clean publish -Pversion=$TAG_NAME --info"
+
