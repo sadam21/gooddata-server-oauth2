@@ -28,7 +28,8 @@ jobs:
           VERSION: ${{ github.event.inputs.version }}
           TAG_NAME: gooddata-server-oauth2-${{ github.event.inputs.version }}
         run: |
-          echo ">>> git tag $TAG_NAME" |
+          echo "$VERSION" | grep -P '^\d+\.\d+\.\d+$'
+          echo ">>> git tag $TAG_NAME"
           echo ">>> git push origin $TAG_NAME"
           echo ">>> ./gradlew clean publish -Pversion=$TAG_NAME --info"
 
